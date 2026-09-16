@@ -1,0 +1,58 @@
+name: Deploy Node.js App
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+jobs:
+  deploy:
+    if: github.event.pull_request.merged == true
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Master
+        uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Tests
+        run: npm test
+
+      - name: Stop Old Application
+        run: |
+          if [ -f /home/ubuntu/githubaction/app.pid ]; then
+            PID=$(cat /home/ubuntu/githubaction/app.pid)
+
+            if kill -0 "$PID" 2>/dev/null; then
+              kill "$PID"
+              sleep 2
+            fi
+
+            rm -f /home/ubuntu/githubaction/app.pid
+          fi
+
+      - name: Start Application
+        run: |
+          mkdir -p /home/ubuntu/githubaction
+          cd /home/ubuntu/githubaction
+
+          RUNNER_TRACKING_ID="" nohup node server.js > app.log 2>&1 &
+
+          echo $! > app.pid
+
+      - name: Verify Deployment
+        run: |
+          sleep 5
+          curl --fail http://localhost:5000/hello
