@@ -9,6 +9,6 @@ test("GET /hello returns Hello message", async () => {
   assert.strictEqual(response.statusCode, 200);
   assert.deepStrictEqual(response.body, {
     success: true,
-    message: "Hello from github action",
+    message: "Hello from github action Welsome back",
   });
 });
