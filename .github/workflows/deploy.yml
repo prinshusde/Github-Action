@@ -30,17 +30,20 @@ jobs:
       - name: Run Tests
         run: npm test
 
+      - name: Build Application
+        run: npm run build
+
       - name: Stop Old Application
         run: |
-          if [ -f /home/ubuntu/githubaction/app.pid ]; then
-            PID=$(cat /home/ubuntu/githubaction/app.pid)
+          if [ -f /home/ubuntu/node-demo/app.pid ]; then
+            PID=$(cat /home/ubuntu/node-demo/app.pid)
 
             if kill -0 "$PID" 2>/dev/null; then
               kill "$PID"
               sleep 2
             fi
 
-            rm -f /home/ubuntu/githubaction/app.pid
+            rm -f /home/ubuntu/node-demo/app.pid
           fi
 
 
@@ -52,8 +55,8 @@ jobs:
 
       - name: Start Application
         run: |
-          mkdir -p /home/ubuntu/githubaction
-          cd /home/ubuntu/githubaction
+          mkdir -p /home/ubuntu/node-demo
+          cd /home/ubuntu/node-demo
 
           RUNNER_TRACKING_ID="" nohup node server.js > app.log 2>&1 &
 
