@@ -35,31 +35,27 @@ jobs:
 
       - name: Stop Old Application
         run: |
-          if [ -f /home/ubuntu/node-demo/app.pid ]; then
-            PID=$(cat /home/ubuntu/node-demo/app.pid)
+          if [ -f /home/devops/node-demo/app.pid ]; then
+            PID=$(cat /home/devops/node-demo/app.pid)
 
             if kill -0 "$PID" 2>/dev/null; then
               kill "$PID"
               sleep 2
             fi
 
-            rm -f /home/ubuntu/node-demo/app.pid
+            rm -f /home/devops/node-demo/app.pid
           fi
-
 
       - name: Copy New Application
         run: |
-          rm -rf /home/ubuntu/node-demo
-          mkdir -p /home/ubuntu/node-demo
-          cp -r . /home/ubuntu/node-demo
+          rm -rf /home/devops/node-demo
+          mkdir -p /home/devops/node-demo
+          cp -r . /home/devops/node-demo
 
       - name: Start Application
         run: |
-          mkdir -p /home/ubuntu/node-demo
-          cd /home/ubuntu/node-demo
-
+          cd /home/devops/node-demo
           RUNNER_TRACKING_ID="" nohup node server.js > app.log 2>&1 &
-
           echo $! > app.pid
 
       - name: Verify Deployment
