@@ -6,7 +6,7 @@ router.get("/hello",(req,res)=>{
       try {
           res.status(200).json({
               success:true,
-              message:"Hello from github action"
+              message:"Hello from github action Welsome back"
           })
       } catch (error) {
          res.status(500).json({
