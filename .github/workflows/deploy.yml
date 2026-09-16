@@ -13,10 +13,10 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Checkout Master
+      - name: Checkout main
         uses: actions/checkout@v4
         with:
-          ref: master
+          ref: main
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -42,6 +42,13 @@ jobs:
 
             rm -f /home/ubuntu/githubaction/app.pid
           fi
+
+
+      - name: Copy New Application
+        run: |
+          rm -rf /home/ubuntu/node-demo
+          mkdir -p /home/ubuntu/node-demo
+          cp -r . /home/ubuntu/node-demo
 
       - name: Start Application
         run: |
